@@ -25,12 +25,21 @@ export interface PlanResult {
   annualKWh: number
   requiresTOUAssumption: boolean
   notes: string[]
+  breakdown: PlanCostBreakdown
 }
 
 export interface MonthlyPlanCost {
   billPeriod: string
   cost: number
   kWh: number
+}
+
+export interface PlanCostBreakdown {
+  energyCharge: number
+  riderCharge: number
+  customerCharge: number
+  demandCharge: number
+  total: number
 }
 
 export interface AnalysisResult {

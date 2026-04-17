@@ -5,25 +5,30 @@ import type { BillingPeriodSummary } from '@/lib/powerbill/types'
 
 export default function UsageChart({ data }: { data: BillingPeriodSummary[] }) {
   return (
-    <div className="chart-card">
-      <h3 className="chart-card__title">Monthly Usage (kWh)</h3>
-      <ResponsiveContainer width="100%" height={220}>
-        <BarChart data={data} margin={{ top: 4, right: 8, left: -16, bottom: 40 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(45,143,115,0.15)" />
-          <XAxis dataKey="period" tick={{ fontSize: 11, fill: '#406259' }} angle={-45} textAnchor="end" interval={0} />
-          <YAxis tick={{ fontSize: 11, fill: '#406259' }} />
+    <div className="pb-section">
+      <p className="pb-section__title">Monthly usage</p>
+      <ResponsiveContainer width="100%" height={200}>
+        <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 36 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.93 0 0)" vertical={false} />
+          <XAxis dataKey="period" tick={{ fontSize: 10, fill: 'oklch(0.6 0 0)' }} angle={-45} textAnchor="end" interval={0} />
+          <YAxis tick={{ fontSize: 10, fill: 'oklch(0.6 0 0)' }} />
           <Tooltip
-            contentStyle={{ background: 'rgba(255,255,255,0.95)', border: '1px solid #2d8f73', borderRadius: 10, fontSize: 13 }}
-            formatter={(v) => [`${Number(v).toLocaleString()} kWh`, 'Usage']}
+            contentStyle={{ background: 'white', border: '1px solid oklch(0.9 0 0)', borderRadius: 8, fontSize: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.08)' }}
+            formatter={(v) => [`${Number(v).toLocaleString()} kWh`]}
+            labelStyle={{ fontWeight: 600, marginBottom: 2 }}
           />
-          <Bar dataKey="kWh" radius={[4, 4, 0, 0]}>
-            {data.map((entry, i) => <Cell key={i} fill={entry.isSummer ? '#2d8f73' : '#8ecfbc'} />)}
+          <Bar dataKey="kWh" radius={[3, 3, 0, 0]} maxBarSize={32}>
+            {data.map((d, i) => <Cell key={i} fill={d.isSummer ? '#2d8f73' : '#b9e8d7'} />)}
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-      <div className="chart-legend">
-        <span className="chart-legend__item chart-legend__item--summer">Summer (Jun–Sep)</span>
-        <span className="chart-legend__item chart-legend__item--winter">Winter (Oct–May)</span>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '0.25rem' }}>
+        {[['#2d8f73', 'Summer (Jun–Sep)'], ['#b9e8d7', 'Winter (Oct–May)']].map(([color, label]) => (
+          <span key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.72rem', color: 'oklch(0.6 0 0)' }}>
+            <span style={{ width: 10, height: 10, borderRadius: 2, background: color, display: 'inline-block' }} />
+            {label}
+          </span>
+        ))}
       </div>
     </div>
   )

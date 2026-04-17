@@ -29,12 +29,20 @@ function calcR30(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.r30
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0
+  let energyCharge = 0
+  let riderCharge = 0
+  let customerCharge = 0
   for (const p of periods) {
     const energy = p.isSummer
       ? applyTieredRate(p.totalKWh, plan.summer.tiers)
       : p.totalKWh * plan.winter.rate
-    const total = energy + withRider(p.totalKWh) + plan.customerChargePerMonth
+    const riders = withRider(p.totalKWh)
+    const monthlyCustomerCharge = plan.customerChargePerMonth
+    const total = energy + riders + monthlyCustomerCharge
     monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy
+    riderCharge += riders
+    customerCharge += monthlyCustomerCharge
     annual += total
   }
   return {
@@ -42,6 +50,7 @@ function calcR30(periods: BillingPeriod[]): PlanResult {
     annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
     requiresTOUAssumption: false,
     notes: ['Tiered summer: first 650 kWh @ $0.086, up to 1,000 @ $0.143, above @ $0.148. Flat $0.081 winter.'],
+    breakdown: { energyCharge, riderCharge, customerCharge, demandCharge: 0, total: annual },
   }
 }
 
@@ -49,9 +58,15 @@ function calcPrePay(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.prepay
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0
+  let energyCharge = 0
+  let riderCharge = 0
   for (const p of periods) {
-    const total = p.totalKWh * (p.isSummer ? plan.summer.rate : plan.winter.rate) + withRider(p.totalKWh)
+    const energy = p.totalKWh * (p.isSummer ? plan.summer.rate : plan.winter.rate)
+    const riders = withRider(p.totalKWh)
+    const total = energy + riders
     monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy
+    riderCharge += riders
     annual += total
   }
   return {
@@ -59,6 +74,7 @@ function calcPrePay(periods: BillingPeriod[]): PlanResult {
     annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
     requiresTOUAssumption: false,
     notes: ['No monthly service charge. Flat $0.120 summer, $0.084 winter.'],
+    breakdown: { energyCharge, riderCharge, customerCharge: 0, demandCharge: 0, total: annual },
   }
 }
 
@@ -66,6 +82,9 @@ function calcNightsWeekends(periods: BillingPeriod[], a: TOUAssumptions): PlanRe
   const plan = PLANS.nights_weekends
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0
+  let energyCharge = 0
+  let riderCharge = 0
+  let customerCharge = 0
   for (const p of periods) {
     let energy = 0
     for (const day of p.days) {
@@ -77,8 +96,13 @@ function calcNightsWeekends(periods: BillingPeriod[], a: TOUAssumptions): PlanRe
         energy += day.kWh * plan.offPeak.rate
       }
     }
-    const total = energy + withRider(p.totalKWh) + plan.customerChargePerMonth
+    const riders = withRider(p.totalKWh)
+    const monthlyCustomerCharge = plan.customerChargePerMonth
+    const total = energy + riders + monthlyCustomerCharge
     monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy
+    riderCharge += riders
+    customerCharge += monthlyCustomerCharge
     annual += total
   }
   return {
@@ -89,6 +113,7 @@ function calcNightsWeekends(periods: BillingPeriod[], a: TOUAssumptions): PlanRe
       `Assumes ${a.summerWeekdayPeakPct}% of weekday summer usage during on-peak (2–7 PM).`,
       'On-peak applies Jun–Sep, Mon–Fri only.',
     ],
+    breakdown: { energyCharge, riderCharge, customerCharge, demandCharge: 0, total: annual },
   }
 }
 
@@ -96,6 +121,10 @@ function calcSmartUsage(periods: BillingPeriod[], a: TOUAssumptions): PlanResult
   const plan = PLANS.smart_usage
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0
+  let energyCharge = 0
+  let riderCharge = 0
+  let customerCharge = 0
+  let demandCharge = 0
   for (const p of periods) {
     let energy = 0, maxDay = 0
     for (const day of p.days) {
@@ -110,8 +139,14 @@ function calcSmartUsage(periods: BillingPeriod[], a: TOUAssumptions): PlanResult
     }
     // Demand: estimated from 12% of peak daily kWh → approx peak hourly kW
     const demandCost = maxDay * 0.12 * plan.demandChargePerKW
-    const total = energy + withRider(p.totalKWh) + demandCost + plan.customerChargePerMonth
+    const riders = withRider(p.totalKWh)
+    const monthlyCustomerCharge = plan.customerChargePerMonth
+    const total = energy + riders + demandCost + monthlyCustomerCharge
     monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy
+    riderCharge += riders
+    customerCharge += monthlyCustomerCharge
+    demandCharge += demandCost
     annual += total
   }
   return {
@@ -122,6 +157,7 @@ function calcSmartUsage(periods: BillingPeriod[], a: TOUAssumptions): PlanResult
       `Assumes ${a.summerWeekdayPeakPct}% of weekday summer usage during on-peak (2–7 PM).`,
       'Demand charge ($12.21/kW) estimated from peak daily usage — actual depends on your peak hourly draw.',
     ],
+    breakdown: { energyCharge, riderCharge, customerCharge, demandCharge, total: annual },
   }
 }
 
@@ -129,6 +165,9 @@ function calcOvernightAdvantage(periods: BillingPeriod[], a: TOUAssumptions): Pl
   const plan = PLANS.overnight_advantage
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0
+  let energyCharge = 0
+  let riderCharge = 0
+  let customerCharge = 0
   for (const p of periods) {
     let energy = 0
     for (const day of p.days) {
@@ -142,8 +181,13 @@ function calcOvernightAdvantage(periods: BillingPeriod[], a: TOUAssumptions): Pl
         energy += superKWh * plan.superOffPeak.rate + remaining * plan.offPeak.rate
       }
     }
-    const total = energy + withRider(p.totalKWh) + plan.customerChargePerMonth
+    const riders = withRider(p.totalKWh)
+    const monthlyCustomerCharge = plan.customerChargePerMonth
+    const total = energy + riders + monthlyCustomerCharge
     monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy
+    riderCharge += riders
+    customerCharge += monthlyCustomerCharge
     annual += total
   }
   return {
@@ -154,6 +198,7 @@ function calcOvernightAdvantage(periods: BillingPeriod[], a: TOUAssumptions): Pl
       `Assumes ${a.superOffPeakPct}% overnight (11 PM–7 AM) and ${a.summerWeekdayPeakPct}% remaining as summer on-peak.`,
       'Super off-peak ($0.022) applies every day 11 PM–7 AM.',
     ],
+    breakdown: { energyCharge, riderCharge, customerCharge, demandCharge: 0, total: annual },
   }
 }
 

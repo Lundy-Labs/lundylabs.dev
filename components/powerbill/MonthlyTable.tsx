@@ -3,90 +3,59 @@
 import type { PlanResult, PlanId } from '@/lib/powerbill/types'
 
 const SHORT: Record<string, string> = {
-  r30: 'Standard',
-  prepay: 'PrePay',
-  nights_weekends: 'Nights & Wknd',
-  smart_usage: 'Smart Usage',
-  overnight_advantage: 'Overnight Adv.',
+  r30: 'Standard', prepay: 'PrePay', nights_weekends: 'Nights & Wknd',
+  smart_usage: 'Smart Usage', overnight_advantage: 'Overnight Adv.',
 }
 
-interface Props {
-  plans: PlanResult[]
-  bestPlanId: PlanId
-  currentPlanId: PlanId
-}
+interface Props { plans: PlanResult[]; bestPlanId: PlanId; currentPlanId: PlanId }
 
 export default function MonthlyTable({ plans, bestPlanId, currentPlanId }: Props) {
   const periods = plans[0]?.monthlyCosts.map((m) => m.billPeriod) ?? []
 
-  function label(billPeriod: string): string {
-    const start = billPeriod.split(' - ')[0] ?? ''
-    const d = new Date(start + 'T12:00:00')
-    return isNaN(d.getTime()) ? billPeriod : d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+  function label(bp: string) {
+    const d = new Date((bp.split(' - ')[0] ?? '') + 'T12:00:00')
+    return isNaN(d.getTime()) ? bp : d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   }
+  const costFor = (p: PlanResult, bp: string) => p.monthlyCosts.find((m) => m.billPeriod === bp)?.cost ?? 0
+  const kWhFor = (bp: string) => plans[0]?.monthlyCosts.find((m) => m.billPeriod === bp)?.kWh ?? 0
 
-  function costFor(plan: PlanResult, period: string): number {
-    return plan.monthlyCosts.find((m) => m.billPeriod === period)?.cost ?? 0
-  }
-
-  function kWhFor(period: string): number {
-    return plans[0]?.monthlyCosts.find((m) => m.billPeriod === period)?.kWh ?? 0
-  }
-
-  // Current plan first, then remaining sorted cheapest → most expensive
-  const currentPlan = plans.find((p) => p.planId === currentPlanId)!
-  const otherPlans = [...plans]
-    .filter((p) => p.planId !== currentPlanId)
-    .sort((a, b) => a.annualCost - b.annualCost)
-  const orderedPlans = [currentPlan, ...otherPlans]
+  const current = plans.find((p) => p.planId === currentPlanId)!
+  const others = [...plans].filter((p) => p.planId !== currentPlanId).sort((a, b) => a.annualCost - b.annualCost)
+  const ordered = [current, ...others]
 
   return (
-    <div className="monthly-table-wrap">
-      <h3 className="chart-card__title" style={{ marginBottom: '1rem' }}>Monthly Cost by Plan</h3>
-      <div className="monthly-table-scroll">
-        <table className="monthly-table">
+    <div className="pb-section">
+      <p className="pb-section__title">Monthly breakdown</p>
+      <div className="pb-table-wrap">
+        <table className="pb-table">
           <thead>
             <tr>
-              <th className="monthly-table__period-col">Period</th>
-              <th className="monthly-table__kwh-col">kWh</th>
-              {orderedPlans.map((p) => (
-                <th
-                  key={p.planId}
-                  className={[
-                    p.planId === currentPlanId ? 'monthly-table__current-col' : '',
-                    p.planId === bestPlanId && p.planId !== currentPlanId ? 'monthly-table__best-col' : '',
-                  ].join(' ')}
-                >
-                  {SHORT[p.planId] ?? p.planName}
-                  {p.planId === currentPlanId && <span className="monthly-table__tag monthly-table__tag--current">current</span>}
-                  {p.planId === bestPlanId && p.planId !== currentPlanId && <span className="monthly-table__tag monthly-table__tag--best">★ best</span>}
+              <th style={{ textAlign: 'left' }}>Period</th>
+              <th>kWh</th>
+              {ordered.map((p) => (
+                <th key={p.planId} className={p.planId === bestPlanId && p.planId !== currentPlanId ? 'pb-table__best-col' : p.planId === currentPlanId ? 'pb-table__current' : ''}>
+                  {SHORT[p.planId]}
+                  {p.planId === currentPlanId && <span className="pb-tag pb-tag--current">you</span>}
+                  {p.planId === bestPlanId && p.planId !== currentPlanId && <span className="pb-tag pb-tag--best">best</span>}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {periods.map((period) => {
-              const currentCost = costFor(currentPlan, period)
+            {periods.map((bp) => {
+              const curCost = costFor(current, bp)
               return (
-                <tr key={period}>
-                  <td className="monthly-table__period-col">{label(period)}</td>
-                  <td className="monthly-table__kwh-col">{kWhFor(period).toLocaleString()}</td>
-                  {orderedPlans.map((p) => {
-                    const cost = costFor(p, period)
-                    const diff = p.planId !== currentPlanId ? cost - currentCost : null
+                <tr key={bp}>
+                  <td>{label(bp)}</td>
+                  <td className="pb-table__kwh">{kWhFor(bp).toLocaleString()}</td>
+                  {ordered.map((p) => {
+                    const cost = costFor(p, bp)
+                    const diff = p.planId !== currentPlanId ? cost - curCost : null
                     return (
-                      <td
-                        key={p.planId}
-                        className={[
-                          p.planId === currentPlanId ? 'monthly-table__current-col' : '',
-                          p.planId === bestPlanId && p.planId !== currentPlanId ? 'monthly-table__best-col' : '',
-                        ].join(' ')}
-                      >
-                        <span className="monthly-table__cost">
-                          ${cost.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                        </span>
+                      <td key={p.planId} className={p.planId === bestPlanId && p.planId !== currentPlanId ? 'pb-table__best-col' : p.planId === currentPlanId ? 'pb-table__current' : ''}>
+                        <span className="pb-cost">${cost.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
                         {diff !== null && (
-                          <span className={`monthly-table__diff ${diff < 0 ? 'monthly-table__diff--save' : 'monthly-table__diff--over'}`}>
+                          <span className={`pb-diff ${diff < 0 ? 'pb-diff--save' : 'pb-diff--over'}`}>
                             {diff < 0 ? `−$${Math.abs(diff).toFixed(0)}` : `+$${diff.toFixed(0)}`}
                           </span>
                         )}
@@ -98,22 +67,16 @@ export default function MonthlyTable({ plans, bestPlanId, currentPlanId }: Props
             })}
           </tbody>
           <tfoot>
-            <tr className="monthly-table__total-row">
-              <td colSpan={2}>Annual total</td>
-              {orderedPlans.map((p) => {
-                const diff = p.planId !== currentPlanId ? p.annualCost - currentPlan.annualCost : null
+            <tr>
+              <td colSpan={2} style={{ textAlign: 'left' }}>Annual total</td>
+              {ordered.map((p) => {
+                const diff = p.planId !== currentPlanId ? p.annualCost - current.annualCost : null
                 return (
-                  <td
-                    key={p.planId}
-                    className={[
-                      p.planId === currentPlanId ? 'monthly-table__current-col' : '',
-                      p.planId === bestPlanId && p.planId !== currentPlanId ? 'monthly-table__best-col' : '',
-                    ].join(' ')}
-                  >
-                    <strong>${p.annualCost.toLocaleString('en-US', { maximumFractionDigits: 0 })}</strong>
+                  <td key={p.planId} className={p.planId === bestPlanId && p.planId !== currentPlanId ? 'pb-table__best-col' : p.planId === currentPlanId ? 'pb-table__current' : ''}>
+                    <span className="pb-cost">${p.annualCost.toLocaleString('en-US', { maximumFractionDigits: 0 })}</span>
                     {diff !== null && (
-                      <span className={`monthly-table__diff ${diff < 0 ? 'monthly-table__diff--save' : 'monthly-table__diff--over'}`}>
-                        {diff < 0 ? `−$${Math.abs(diff).toFixed(0)}` : `+$${diff.toFixed(0)}`}
+                      <span className={`pb-diff ${diff < 0 ? 'pb-diff--save' : 'pb-diff--over'}`}>
+                        {diff < 0 ? `−$${Math.abs(diff).toFixed(0)}/yr` : `+$${diff.toFixed(0)}/yr`}
                       </span>
                     )}
                   </td>
