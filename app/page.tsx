@@ -1,154 +1,245 @@
 import Link from 'next/link'
-import { ArrowRight, BarChart3, FileSpreadsheet, Lightbulb, MapPin } from 'lucide-react'
-
-import { Badge } from '@/components/ui/badge'
+import { ArrowRight, FileSpreadsheet, MapPin, Search, Target, Zap } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
-const focusAreas = [
+const projects = [
   {
-    title: 'Applied Research',
-    description: 'We turn practical questions into usable analysis instead of reports that sit on a shelf.',
-    icon: Lightbulb,
+    id: 'bill-analyzer',
+    title: 'Georgia Power Bill Analyzer',
+    description:
+      'Upload your Georgia Power usage export and compare all five residential rate plans side by side to see which one actually costs less.',
+    status: 'live' as const,
+    tag: 'Public-interest tool',
+    href: '/powerbill',
+    Icon: FileSpreadsheet,
+    features: [
+      'Runs entirely in your browser — no data uploaded',
+      'All 5 residential plans compared',
+      'Annual cost breakdown with the math shown',
+    ],
   },
   {
-    title: 'Public Interest Tools',
-    description: 'We build lightweight products that help households and communities make better decisions.',
-    icon: BarChart3,
+    id: 'utility-research',
+    title: 'Utility Research',
+    description:
+      'Ongoing research into residential utility pricing, policy changes, and consumer impact across Georgia.',
+    status: 'research' as const,
+    tag: 'Research',
+    href: null,
+    Icon: Search,
+    features: [],
   },
   {
-    title: 'Georgia Context',
-    description: 'Our work starts local, with a close eye on the systems affecting people in Georgia every day.',
-    icon: MapPin,
+    id: 'decision-tools',
+    title: 'Decision Tools',
+    description:
+      'More lightweight tools that help households make smarter decisions using data they already have.',
+    status: 'planned' as const,
+    tag: 'Roadmap',
+    href: null,
+    Icon: Target,
+    features: [],
   },
 ]
 
-const signals = [
-  'Research',
-  'Strategy',
-  'Public-interest software',
-  'Georgia',
+const blogPosts = [
+  { title: 'Why we built the bill analyzer', tag: 'Product' },
+  { title: 'How Georgia Power residential plans actually work', tag: 'Research' },
+  { title: 'Small tools, real impact', tag: 'Philosophy' },
 ]
+
+const statusLabel: Record<string, string> = {
+  live: 'Live',
+  research: 'Research',
+  planned: 'Planned',
+}
 
 export default function Home() {
   return (
-    <main className="home-shell">
+    <>
+      {/* ── Hero ── */}
       <section className="home-hero">
-        <div className="home-hero__intro">
-          <div className="home-topline">
-            <span className="home-wordmark">Lundy Labs</span>
-            <span className="home-topline__dot" />
-            <span className="home-topline__text">Part of the Lundy family</span>
-          </div>
-          <Badge variant="outline" className="home-kicker">
-            Think tank
-          </Badge>
-          <h1 className="home-title">A small think tank for practical ideas.</h1>
-          <p className="home-sub">
-            Lundy Labs sits inside a broader family of work. Here, the focus is research, strategy, and simple software
-            that helps people make better decisions in the real world.
+        <div className="home-hero__inner">
+          <p className="home-hero__tag">Lundy Labs · Think Tank</p>
+          <h1 className="home-hero__title">Practical ideas. Useful tools.</h1>
+          <p className="home-hero__copy">
+            Lundy Labs is a small think tank building research and software that helps people make
+            better decisions. We start in Georgia, with a focus on public-interest problems.
           </p>
-          <div className="home-actions">
-            <Link href="/powerbill" className={cn(buttonVariants())}>
-              Open the analyzer
+          <div className="home-hero__actions">
+            <Link href="/powerbill" className={cn(buttonVariants(), 'home-hero__cta')}>
+              Try Bill Analyzer
+              <ArrowRight size={15} />
             </Link>
-            <Link href="#current-work" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'home-link-button')}>
-              Current work
+            <Link
+              href="#projects"
+              className={cn(buttonVariants({ variant: 'ghost' }), 'home-hero__ghost')}
+            >
+              See our work
             </Link>
           </div>
-          <div className="home-signal-row">
-            {signals.map((signal) => (
-              <div key={signal} className="home-signal-chip">
-                {signal}
+        </div>
+      </section>
+
+      {/* ── Feature strip ── */}
+      <div className="home-feature-strip">
+        <div className="home-feature-strip__inner">
+          <div className="home-feature-strip__left">
+            <span className="home-feature-strip__eyebrow">
+              <Zap size={13} />
+              Live now
+            </span>
+            <p className="home-feature-strip__text">
+              Are you on the right Georgia Power plan? Find out in minutes.
+            </p>
+          </div>
+          <Link
+            href="/powerbill"
+            className={cn(
+              buttonVariants({ size: 'sm', variant: 'outline' }),
+              'home-feature-strip__cta',
+            )}
+          >
+            Open analyzer
+            <ArrowRight size={13} />
+          </Link>
+        </div>
+      </div>
+
+      <div className="home-body">
+        {/* ── Projects ── */}
+        <section id="projects" className="home-section">
+          <div className="home-section__head">
+            <p className="home-section__eyebrow">Work</p>
+            <h2 className="home-section__title">Projects</h2>
+            <p className="home-section__sub">One live tool and more in progress.</p>
+          </div>
+          <div className="home-projects-grid">
+            {projects.map(({ id, title, description, status, tag, href, Icon, features }) => (
+              <div
+                key={id}
+                className={cn('home-project', status === 'live' && 'home-project--live')}
+              >
+                <div className="home-project__header">
+                  <div className="home-project__icon">
+                    <Icon size={17} />
+                  </div>
+                  <span className={cn('home-project__status', `home-project__status--${status}`)}>
+                    {statusLabel[status]}
+                  </span>
+                </div>
+                <p className="home-project__tag">{tag}</p>
+                <h3 className="home-project__title">{title}</h3>
+                <p className="home-project__desc">{description}</p>
+                {features.length > 0 && (
+                  <ul className="home-project__features">
+                    {features.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ul>
+                )}
+                {href && (
+                  <Link
+                    href={href}
+                    className={cn(buttonVariants({ size: 'sm' }), 'home-project__cta')}
+                  >
+                    Open
+                    <ArrowRight size={13} />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="home-story">
-        <div className="home-story__intro">
-          <p className="home-section__label">How we work</p>
-          <h2 className="home-section__title">Quietly opinionated. Deliberately useful.</h2>
-          <p className="home-story__copy">
-            We focus on work where analysis and product design need to live together, and where a clean answer is more
-            valuable than a complicated one.
-          </p>
-        </div>
-        <div className="home-grid">
-          {focusAreas.map(({ title, description, icon: Icon }, index) => (
-            <Card key={title} size="sm" className="home-info-card">
-              <CardHeader>
-                <div className="home-info-card__meta">
-                  <div className="home-info-card__icon">
-                    <Icon size={18} />
-                  </div>
-                  <span className="home-info-card__index">0{index + 1}</span>
-                </div>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <section id="current-work" className="home-section home-section--feature">
-        <div className="home-section__heading">
-          <p className="home-section__label">Current work</p>
-          <h2 className="home-section__title">One live product so far.</h2>
-        </div>
-        <Card className="home-project-card">
-          <CardHeader className="home-project-card__header">
-            <div className="home-project-card__eyebrow">
-              <FileSpreadsheet size={16} />
-              Current functionality
-            </div>
-            <div className="home-project-card__top">
-              <CardTitle>Georgia Power Bill Analyzer</CardTitle>
-              <Badge variant="outline" className="home-badge-live">
-                Live
-              </Badge>
-            </div>
-            <CardDescription>
-              Upload your Georgia Power usage export and compare residential plans side by side to see which option
-              actually costs less.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="home-project-card__content">
-            <div className="home-project-feature">
-              <span className="home-project-feature__label">Input</span>
-              <strong>Georgia Power usage export</strong>
-            </div>
-            <div className="home-project-feature">
-              <span className="home-project-feature__label">What you get</span>
-              <strong>Annual cost comparison across plans</strong>
-            </div>
-            <div className="home-project-feature">
-              <span className="home-project-feature__label">Built for</span>
-              <strong>Residents choosing the right rate</strong>
-            </div>
-          </CardContent>
-          <div className="home-project-card__cta-row">
-            <Link href="/powerbill" className={cn(buttonVariants({ size: 'xs' }), 'home-project-card__button')}>
-              Open analyzer
-              <ArrowRight size={14} />
-            </Link>
+        {/* ── About ── */}
+        <section id="about" className="home-section">
+          <div className="home-section__head">
+            <p className="home-section__eyebrow">Who we are</p>
+            <h2 className="home-section__title">About Us</h2>
           </div>
-        </Card>
-      </section>
+          <div className="home-about">
+            <div className="home-about__left">
+              <p className="home-about__lead">
+                Lundy Labs is a research and product studio inside the Lundy family of work.
+              </p>
+              <p className="home-about__body">
+                We focus on problems where data and product design need to live together — and where
+                a clean, honest answer is more valuable than a complicated one.
+              </p>
+              <p className="home-about__body">
+                Our work starts local, with a close eye on the systems affecting people in Georgia
+                every day. We build tools that are lightweight, privacy-respecting, and built to
+                actually get used.
+              </p>
+            </div>
+            <div className="home-about__pillars">
+              <div className="home-about__pillar">
+                <div className="home-about__pillar-icon">
+                  <Zap size={16} />
+                </div>
+                <div>
+                  <strong>Applied Research</strong>
+                  <p>
+                    We turn practical questions into usable analysis, not reports that sit on a
+                    shelf.
+                  </p>
+                </div>
+              </div>
+              <div className="home-about__pillar">
+                <div className="home-about__pillar-icon">
+                  <FileSpreadsheet size={16} />
+                </div>
+                <div>
+                  <strong>Public Interest Tools</strong>
+                  <p>
+                    Lightweight products that help households and communities make better decisions.
+                  </p>
+                </div>
+              </div>
+              <div className="home-about__pillar">
+                <div className="home-about__pillar-icon">
+                  <MapPin size={16} />
+                </div>
+                <div>
+                  <strong>Georgia First</strong>
+                  <p>We start local, with eyes on the systems affecting Georgians every day.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* ── Blog ── */}
+        <section id="blog" className="home-section">
+          <div className="home-section__head">
+            <p className="home-section__eyebrow">Writing</p>
+            <h2 className="home-section__title">Blog</h2>
+            <p className="home-section__sub">Notes on our work, research, and ideas.</p>
+          </div>
+          <div className="home-blog-grid">
+            {blogPosts.map(({ title, tag }) => (
+              <div key={title} className="home-blog-card home-blog-card--stub">
+                <span className="home-blog-card__tag">{tag}</span>
+                <h3 className="home-blog-card__title">{title}</h3>
+                <span className="home-blog-card__date">Coming soon</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* ── Footer ── */}
       <footer className="home-footer">
-        <p>© {new Date().getFullYear()} Lundy Labs LLC</p>
-        <p>Independent thinking, practical outputs.</p>
+        <div className="home-footer__inner">
+          <div className="home-footer__left">
+            <span className="home-footer__wordmark">Lundy Labs</span>
+            <p>Independent thinking, practical outputs.</p>
+          </div>
+          <p className="home-footer__copy">© {new Date().getFullYear()} Lundy Labs LLC</p>
+        </div>
       </footer>
-    </main>
+    </>
   )
 }
