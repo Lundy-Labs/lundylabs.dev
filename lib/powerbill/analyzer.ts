@@ -28,7 +28,7 @@ function periodLabel(p: BillingPeriod): string {
   return p.startDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 }
 
-function calcR30(periods: BillingPeriod[]): PlanResult {
+export function calcR30(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.r30
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0, energyCharge = 0, riderCharge = 0, customerCharge = 0
@@ -51,7 +51,7 @@ function calcR30(periods: BillingPeriod[]): PlanResult {
   }
 }
 
-function calcPrePay(periods: BillingPeriod[]): PlanResult {
+export function calcPrePay(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.prepay
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0, energyCharge = 0, riderCharge = 0
@@ -71,7 +71,7 @@ function calcPrePay(periods: BillingPeriod[]): PlanResult {
   }
 }
 
-function calcNightsWeekends(periods: BillingPeriod[]): PlanResult {
+export function calcNightsWeekends(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.nights_weekends
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0, energyCharge = 0, riderCharge = 0, customerCharge = 0
@@ -102,7 +102,7 @@ function calcNightsWeekends(periods: BillingPeriod[]): PlanResult {
   }
 }
 
-function calcSmartUsage(periods: BillingPeriod[]): PlanResult {
+export function calcSmartUsage(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.smart_usage
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0, energyCharge = 0, riderCharge = 0, customerCharge = 0, demandCharge = 0
@@ -137,7 +137,7 @@ function calcSmartUsage(periods: BillingPeriod[]): PlanResult {
   }
 }
 
-function calcOvernightAdvantage(periods: BillingPeriod[]): PlanResult {
+export function calcOvernightAdvantage(periods: BillingPeriod[]): PlanResult {
   const plan = PLANS.overnight_advantage
   const monthlyCosts: MonthlyPlanCost[] = []
   let annual = 0, energyCharge = 0, riderCharge = 0, customerCharge = 0

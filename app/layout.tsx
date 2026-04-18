@@ -20,11 +20,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>
-        <Script 
-          defer 
-          src="https://cloud.umami.is/script.js" 
-          data-website-id="02226505-26bb-4a1d-a7d0-92b23a42d8c5"
-        />
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            src="/umami/script.js"
+            data-website-id="02226505-26bb-4a1d-a7d0-92b23a42d8c5"
+            strategy="afterInteractive"
+          />
+        )}
         <Nav />
         {children}
       </body>

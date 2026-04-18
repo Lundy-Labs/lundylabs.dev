@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { parseGPCFile, groupByBillingPeriod } from '@/lib/powerbill/parser'
 import { analyze } from '@/lib/powerbill/analyzer'
 import type { DailyRecord, AnalysisResult, PlanId } from '@/lib/powerbill/types'
+import SolarAnalyzer from '@/components/solar/SolarAnalyzer'
 
 const UsageChart = dynamic(() => import('./UsageChart'), { ssr: false })
 const CostChart = dynamic(() => import('./CostChart'), { ssr: false })
@@ -155,6 +156,12 @@ export default function PowerBillAnalyzer() {
         Costs include tariff energy charges (Jan 2025 rates), an estimated $0.05/kWh rider adder (FCR-26 + ECCR + DSM), and monthly customer charges where applicable. Municipal franchise fees and local taxes excluded. Time-of-use plans are calculated from your actual hourly data. Verify current rates at{' '}
         <a href="https://www.georgiapower.com/residential/rate-plans.html" target="_blank" rel="noopener noreferrer">georgiapower.com</a>.
       </div>
+
+      {periodsRef.current && (
+        <div className="pb-section" style={{ borderBottom: 'none' }}>
+          <SolarAnalyzer periods={periodsRef.current} baselineResult={result} />
+        </div>
+      )}
     </div>
   )
 }

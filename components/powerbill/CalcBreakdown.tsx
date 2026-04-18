@@ -61,7 +61,7 @@ export default function CalcBreakdown({ plans, currentPlanId, bestPlanId }: Prop
                 )}
                 <div className="pb-calc-row pb-calc-row--total">
                   <span>Annual estimate</span>
-                  <strong>{fmt(plan.breakdown.total)}</strong>
+                  <strong>{fmt(plan.breakdown.total)} <span className="pb-calc-row__monthly">({fmt(plan.breakdown.total / 12)}/mo)</span></strong>
                 </div>
               </div>
 
