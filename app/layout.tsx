@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "Lundy Labs",
-  description:
-    "Lundy Labs is a think tank building purposeful products, practical experiments, and systems that make the world a little better.",
+  title: "Lundy Labs LLC",
+  description: "Focused on building cool things and making the world a better place.",
 };
 
 export default function RootLayout({
@@ -13,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <body>{children}</body>
     </html>
   );
