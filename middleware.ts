@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
   if (subdomain === 'powerbill') {
     const url = req.nextUrl.clone()
     const original = url.pathname
-    url.pathname = original === '/' ? '/powerbill' : `/powerbill${original}`
+    url.pathname = original === '/' ? '/power-analyzer' : `/power-analyzer${original}`
     return NextResponse.rewrite(url)
   }
 

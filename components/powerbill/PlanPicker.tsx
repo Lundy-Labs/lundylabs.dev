@@ -18,7 +18,7 @@ interface Props {
 export default function PlanPicker({ value, onChange }: Props) {
   return (
     <div className="pb-section">
-      <p className="pb-section__title">Your current plan</p>
+      <p className="pb-section__title">Select Your Current Plan</p>
       <div className="pb-plan-picker">
         {OPTIONS.map((o) => (
           <label key={o.id} className={`pb-plan-option ${value === o.id ? 'pb-plan-option--active' : ''}`}>

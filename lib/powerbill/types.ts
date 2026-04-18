@@ -1,9 +1,17 @@
+export interface HourlyRecord {
+  datetime: Date
+  hour: number
+  kWh: number
+  temp: number
+}
+
 export interface DailyRecord {
   billPeriod: string
   date: Date
   kWh: number
   highTemp: number
   lowTemp: number
+  hours: HourlyRecord[]
 }
 
 export interface BillingPeriod {
@@ -59,7 +67,3 @@ export interface BillingPeriodSummary {
   avgHighTemp: number
 }
 
-export interface TOUAssumptions {
-  summerWeekdayPeakPct: number
-  superOffPeakPct: number
-}
