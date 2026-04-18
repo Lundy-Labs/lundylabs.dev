@@ -13,6 +13,7 @@ const projects = [
     tag: 'Public-interest tool',
     href: '/powerbill',
     Icon: FileSpreadsheet,
+    color: 'green',
     features: [
       'Runs entirely in your browser — no data uploaded',
       'All 5 residential plans compared',
@@ -28,6 +29,7 @@ const projects = [
     tag: 'Research',
     href: null,
     Icon: Search,
+    color: 'blue',
     features: [],
   },
   {
@@ -39,14 +41,15 @@ const projects = [
     tag: 'Roadmap',
     href: null,
     Icon: Target,
+    color: 'amber',
     features: [],
   },
 ]
 
 const blogPosts = [
-  { title: 'Why we built the bill analyzer', tag: 'Product' },
-  { title: 'How Georgia Power residential plans actually work', tag: 'Research' },
-  { title: 'Small tools, real impact', tag: 'Philosophy' },
+  { title: 'Why we built the bill analyzer', tag: 'Product', color: 'green' },
+  { title: 'How Georgia Power residential plans actually work', tag: 'Research', color: 'blue' },
+  { title: 'Small tools, real impact', tag: 'Philosophy', color: 'amber' },
 ]
 
 const statusLabel: Record<string, string> = {
@@ -61,11 +64,17 @@ export default function Home() {
       {/* ── Hero ── */}
       <section className="home-hero">
         <div className="home-hero__inner">
-          <p className="home-hero__tag">Lundy Labs · Think Tank</p>
-          <h1 className="home-hero__title">Practical ideas. Useful tools.</h1>
+          <p className="home-hero__tag">
+            <span className="home-hero__tag-pulse" />
+            Lundy Labs · Think Tank
+          </p>
+          <h1 className="home-hero__title">
+            Big questions,<br />
+            <em>practical</em> answers.
+          </h1>
           <p className="home-hero__copy">
-            Lundy Labs is a small think tank building research and software that helps people make
-            better decisions. We start in Georgia, with a focus on public-interest problems.
+            Lundy Labs turns tricky public-interest problems into research and software
+            that people actually use. We start in Georgia and work outward.
           </p>
           <div className="home-hero__actions">
             <Link href="/powerbill" className={cn(buttonVariants(), 'home-hero__cta')}>
@@ -74,7 +83,7 @@ export default function Home() {
             </Link>
             <Link
               href="#projects"
-              className={cn(buttonVariants({ variant: 'ghost' }), 'home-hero__ghost')}
+              className={cn(buttonVariants({ variant: 'outline' }), 'home-hero__ghost')}
             >
               See our work
             </Link>
@@ -91,15 +100,12 @@ export default function Home() {
               Live now
             </span>
             <p className="home-feature-strip__text">
-              Are you on the right Georgia Power plan? Find out in minutes.
+              Are you on the right Georgia Power plan? Find out in minutes — free.
             </p>
           </div>
           <Link
             href="/powerbill"
-            className={cn(
-              buttonVariants({ size: 'sm', variant: 'outline' }),
-              'home-feature-strip__cta',
-            )}
+            className={cn(buttonVariants({ size: 'sm' }), 'home-feature-strip__cta')}
           >
             Open analyzer
             <ArrowRight size={13} />
@@ -113,16 +119,20 @@ export default function Home() {
           <div className="home-section__head">
             <p className="home-section__eyebrow">Work</p>
             <h2 className="home-section__title">Projects</h2>
-            <p className="home-section__sub">One live tool and more in progress.</p>
+            <p className="home-section__sub">One live tool, more in the pipeline.</p>
           </div>
           <div className="home-projects-grid">
-            {projects.map(({ id, title, description, status, tag, href, Icon, features }) => (
+            {projects.map(({ id, title, description, status, tag, href, Icon, color, features }) => (
               <div
                 key={id}
-                className={cn('home-project', status === 'live' && 'home-project--live')}
+                className={cn(
+                  'home-project',
+                  `home-project--${color}`,
+                  status === 'live' && 'home-project--featured',
+                )}
               >
                 <div className="home-project__header">
-                  <div className="home-project__icon">
+                  <div className={cn('home-project__icon', `home-project__icon--${color}`)}>
                     <Icon size={17} />
                   </div>
                   <span className={cn('home-project__status', `home-project__status--${status}`)}>
@@ -144,8 +154,7 @@ export default function Home() {
                     href={href}
                     className={cn(buttonVariants({ size: 'sm' }), 'home-project__cta')}
                   >
-                    Open
-                    <ArrowRight size={13} />
+                    Open <ArrowRight size={13} />
                   </Link>
                 )}
               </div>
@@ -175,7 +184,7 @@ export default function Home() {
               </p>
             </div>
             <div className="home-about__pillars">
-              <div className="home-about__pillar">
+              <div className="home-about__pillar home-about__pillar--green">
                 <div className="home-about__pillar-icon">
                   <Zap size={16} />
                 </div>
@@ -187,7 +196,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="home-about__pillar">
+              <div className="home-about__pillar home-about__pillar--blue">
                 <div className="home-about__pillar-icon">
                   <FileSpreadsheet size={16} />
                 </div>
@@ -198,7 +207,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="home-about__pillar">
+              <div className="home-about__pillar home-about__pillar--amber">
                 <div className="home-about__pillar-icon">
                   <MapPin size={16} />
                 </div>
@@ -219,9 +228,11 @@ export default function Home() {
             <p className="home-section__sub">Notes on our work, research, and ideas.</p>
           </div>
           <div className="home-blog-grid">
-            {blogPosts.map(({ title, tag }) => (
-              <div key={title} className="home-blog-card home-blog-card--stub">
-                <span className="home-blog-card__tag">{tag}</span>
+            {blogPosts.map(({ title, tag, color }) => (
+              <div key={title} className={cn('home-blog-card', `home-blog-card--${color}`)}>
+                <span className={cn('home-blog-card__tag', `home-blog-card__tag--${color}`)}>
+                  {tag}
+                </span>
                 <h3 className="home-blog-card__title">{title}</h3>
                 <span className="home-blog-card__date">Coming soon</span>
               </div>
