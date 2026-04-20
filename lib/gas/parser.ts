@@ -35,10 +35,11 @@ function parseMonthYear(raw: string): { year: number; month: number } | null {
     if (monthNum) return { year: parseInt(m[1]), month: monthNum }
   }
 
-  // Full date — extract month/year: "01/15/2024", "2024-01-15"
-  m = s.match(/^(\d{4})-(\d{1,2})-\d{1,2}/)
+  // Full date — extract month/year: "2024-01-15", "2024/01/15"
+  m = s.match(/^(\d{4})[-/](\d{1,2})[-/]\d{1,2}/)
   if (m) return { year: parseInt(m[1]), month: parseInt(m[2]) }
 
+  // "01/15/2024" (MM/DD/YYYY)
   m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/)
   if (m) return { year: parseInt(m[3]), month: parseInt(m[1]) }
 
@@ -75,8 +76,8 @@ function rowsToRecords(rows: string[][]): GasMonthlyRecord[] {
     let dIdx = -1, tIdx = -1
     for (let ci = 0; ci < row.length; ci++) {
       const cell = String(row[ci] ?? '').trim()
-      if (looksLikeDateHeader(cell)) dIdx = ci
-      if (looksLikeThermsHeader(cell)) tIdx = ci
+      if (dIdx < 0 && looksLikeDateHeader(cell)) dIdx = ci
+      if (tIdx < 0 && looksLikeThermsHeader(cell)) tIdx = ci
     }
     if (dIdx >= 0 && tIdx >= 0) {
       headerRowIdx = ri

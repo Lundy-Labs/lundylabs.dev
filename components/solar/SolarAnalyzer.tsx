@@ -32,6 +32,10 @@ const PLAN_LABELS: Record<PlanId, string> = {
   nights_weekends: 'Nights & Weekends',
   smart_usage: 'Smart Usage',
   overnight_advantage: 'Overnight Advantage',
+  cobb_standard: 'Standard',
+  cobb_fixed: 'Fixed Rate',
+  cobb_niteflex: 'NiteFlex',
+  cobb_smart_choice: 'Smart Choice',
 }
 
 const SCENARIO_LABELS: Record<SolarScenario, string> = {

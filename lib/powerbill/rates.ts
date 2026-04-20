@@ -72,3 +72,53 @@ export const PLANS = {
     superOffPeak: { rate: 0.022 },
   },
 } as const
+
+// Cobb EMC residential tariffs — effective 2025
+// Source: cobbemc.com/rates
+// Rates are all-inclusive (no separate fuel cost rider listed)
+export const COBB_PLANS = {
+  cobb_standard: {
+    id: 'cobb_standard' as const,
+    name: 'Standard',
+    shortName: 'Standard',
+    description: 'Tiered seasonal plan. First 1,000 kWh flat; higher rate above 1,000 in summer.',
+    customerChargePerMonth: 33.00,
+    requiresTOU: false,
+    baseRate: 0.083,
+    tierThreshold: 1000,
+    summerExcessRate: 0.125,
+    winterExcessRate: 0.09,
+  },
+  cobb_fixed: {
+    id: 'cobb_fixed' as const,
+    name: 'Fixed Rate',
+    shortName: 'Fixed Rate',
+    description: 'Single flat rate all year. Higher service charge but no usage or seasonal surprises.',
+    customerChargePerMonth: 40.00,
+    requiresTOU: false,
+    rate: 0.0825,
+  },
+  cobb_niteflex: {
+    id: 'cobb_niteflex' as const,
+    name: 'NiteFlex',
+    shortName: 'NiteFlex',
+    description: 'TOU plan. 400 kWh free overnight (midnight–6 AM). Cheap daytime — avoid 1–9 PM.',
+    customerChargePerMonth: 33.00,
+    requiresTOU: true,
+    offPeakRate: 0.075,    // 6 AM–1 PM and 9 PM–midnight
+    onPeakRate: 0.14,      // 1 PM–9 PM
+    overnightRate: 0.05,   // midnight–6 AM after free kWh
+    overnightFreeKWh: 400,
+  },
+  cobb_smart_choice: {
+    id: 'cobb_smart_choice' as const,
+    name: 'Smart Choice',
+    shortName: 'Smart Choice',
+    description: 'Flat rate with demand charge. Peak kW above 3 kW during 2–7 PM on peak days costs $5.95/kW.',
+    customerChargePerMonth: 33.00,
+    requiresTOU: true,
+    rate: 0.075,
+    demandFreeKW: 3,
+    demandChargePerKW: 5.95,
+  },
+} as const

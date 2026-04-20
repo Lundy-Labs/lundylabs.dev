@@ -5,16 +5,22 @@ import dynamic from 'next/dynamic'
 import UploadZone from './UploadZone'
 import PlanCard from './PlanCard'
 import PlanPicker from './PlanPicker'
+import ProviderPicker from './ProviderPicker'
 import MonthlyTable from './MonthlyTable'
 import CalcBreakdown from './CalcBreakdown'
 import { Button } from '@/components/ui/button'
 import { parseGPCFile, groupByBillingPeriod } from '@/lib/powerbill/parser'
 import { analyze } from '@/lib/powerbill/analyzer'
-import type { DailyRecord, AnalysisResult, PlanId } from '@/lib/powerbill/types'
+import type { DailyRecord, AnalysisResult, PlanId, ProviderId } from '@/lib/powerbill/types'
 import SolarAnalyzer from '@/components/solar/SolarAnalyzer'
 
 const UsageChart = dynamic(() => import('./UsageChart'), { ssr: false })
 const CostChart = dynamic(() => import('./CostChart'), { ssr: false })
+
+const DEFAULT_PLAN: Record<ProviderId, PlanId> = {
+  georgia_power: 'r30',
+  cobb_emc: 'cobb_standard',
+}
 
 function PrivacyBar({ inline, onNewFile }: { inline?: boolean; onNewFile?: () => void }) {
   return (
@@ -32,13 +38,43 @@ function PrivacyBar({ inline, onNewFile }: { inline?: boolean; onNewFile?: () =>
   )
 }
 
+const PROVIDER_INSTRUCTIONS: Record<ProviderId, { site: string; steps: string[] }> = {
+  georgia_power: {
+    site: 'georgiapower.com',
+    steps: [
+      'Log in at georgiapower.com',
+      'Go to My Account → My Usage → Usage Details',
+      'Select "Hourly" as the export interval',
+      'Set the full date range, click Download Usage (.xlsx)',
+      'Drop that file above',
+    ],
+  },
+  cobb_emc: {
+    site: 'cobbemc.smarthub.coop',
+    steps: [
+      'Log in at cobbemc.smarthub.coop',
+      'Go to My Usage → Usage Details',
+      'Select "Hourly" as the export interval',
+      'Set the full date range and download the usage file (.xlsx)',
+      'Drop that file above',
+    ],
+  },
+}
+
+const PROVIDER_SWITCH_URL: Record<ProviderId, { url: string; phone: string }> = {
+  georgia_power: { url: 'georgiapower.com', phone: '1-888-660-5890' },
+  cobb_emc: { url: 'cobbemc.com', phone: '1-770-429-2100' },
+}
+
 export default function PowerBillAnalyzer() {
   const [records, setRecords] = useState<DailyRecord[] | null>(null)
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [provider, setProvider] = useState<ProviderId>('georgia_power')
   const [currentPlan, setCurrentPlan] = useState<PlanId>('r30')
   const periodsRef = useRef<ReturnType<typeof groupByBillingPeriod> | null>(null)
+  const recordsRef = useRef<DailyRecord[] | null>(null)
 
   const handleFile = useCallback(async (file: File) => {
     setLoading(true)
@@ -48,30 +84,50 @@ export default function PowerBillAnalyzer() {
       if (parsed.length === 0) throw new Error('No usage data found in file.')
       const periods = groupByBillingPeriod(parsed)
       periodsRef.current = periods
+      recordsRef.current = parsed
       setRecords(parsed)
-      setResult(analyze(parsed, periods))
+      setResult(analyze(parsed, periods, provider))
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to parse file.')
     } finally {
       setLoading(false)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provider])
+
+  const handleProviderChange = useCallback((newProvider: ProviderId) => {
+    setProvider(newProvider)
+    setCurrentPlan(DEFAULT_PLAN[newProvider])
+    if (periodsRef.current && recordsRef.current) {
+      setResult(analyze(recordsRef.current, periodsRef.current, newProvider))
+    }
   }, [])
 
   if (!result) {
+    const instructions = PROVIDER_INSTRUCTIONS[provider]
     return (
       <div className="pb-shell">
         <div className="pb-header pb-header--landing">
-          <h1 className="pb-title">Georgia Power Plan Analyzer</h1>
+          <h1 className="pb-title">Power Rate Plan Analyzer</h1>
+          <p className="pb-tagline">
+            Most households are on their utility&rsquo;s default rate plan — but depending on <em>when</em>{' '}you use electricity,
+            a different plan from the same provider could cut your annual bill by hundreds of dollars.
+            Upload your hourly usage data below and we&rsquo;ll run the numbers across every available plan so you can see exactly where you stand.
+          </p>
         </div>
         <PrivacyBar inline />
+        <div className="pb-provider-section">
+          <ProviderPicker value={provider} onChange={handleProviderChange} />
+        </div>
         <div className="pb-how">
           <p className="pb-how__title">How to export your usage data</p>
           <ol className="pb-how__steps">
-            <li>Log in at <strong>georgiapower.com</strong></li>
-            <li>Go to <strong>My Account → My Usage → Usage Details</strong></li>
-            <li><strong style={{ color: 'red' }}>Select &ldquo;Hourly&rdquo; as the export interval</strong></li>
-            <li>Set the full date range, click <strong>Download Usage</strong> (.xlsx)</li>
-            <li>Drop that file above</li>
+            {instructions.steps.map((step, i) => (
+              <li key={i} dangerouslySetInnerHTML={{ __html: step.replace(
+                instructions.site,
+                `<strong>${instructions.site}</strong>`
+              ).replace('"Hourly"', '<strong style="color:red">Hourly</strong>') }} />
+            ))}
           </ol>
         </div>
         <div style={{ marginTop: '1.5rem' }}>
@@ -86,6 +142,7 @@ export default function PowerBillAnalyzer() {
   const sortedPlans = [...result.plans].sort((a, b) => a.annualCost - b.annualCost)
   const bestPlan = sortedPlans[0]
   const savingsVsCurrent = currentPlanResult.annualCost - bestPlan.annualCost
+  const switchInfo = PROVIDER_SWITCH_URL[provider]
 
   return (
     <div className="pb-shell">
@@ -119,7 +176,10 @@ export default function PowerBillAnalyzer() {
           </div>
         </div>
       </div>
-      <PlanPicker value={currentPlan} onChange={setCurrentPlan} />
+      <div className="pb-provider-section">
+        <ProviderPicker value={provider} onChange={handleProviderChange} />
+      </div>
+      <PlanPicker value={currentPlan} onChange={setCurrentPlan} providerId={provider} />
       <div className="pb-section">
         <p className="pb-section__title">Plan details</p>
         {savingsVsCurrent > 0 && bestPlan.planId !== currentPlan && (
@@ -129,7 +189,7 @@ export default function PowerBillAnalyzer() {
               <strong className="pb-savings-callout__amount">${savingsVsCurrent.toLocaleString('en-US', { maximumFractionDigits: 0 })} per year</strong> based on your usage.
             </p>
             <p className="pb-savings-callout__how">
-              To switch: <strong>georgiapower.com</strong> → My Account → My Profile → Rate Plan, or call <strong>1-888-660-5890</strong>. Takes effect next billing cycle.
+              To switch: <strong>{switchInfo.url}</strong> → My Account → My Profile → Rate Plan, or call <strong>{switchInfo.phone}</strong>. Takes effect next billing cycle.
             </p>
           </div>
         )}
@@ -153,11 +213,13 @@ export default function PowerBillAnalyzer() {
       <CalcBreakdown plans={result.plans} currentPlanId={currentPlan} bestPlanId={result.bestPlan} />
 
       <div className="pb-disclaimer">
-        Costs include tariff energy charges (Jan 2025 rates), an estimated $0.05/kWh rider adder (FCR-26 + ECCR + DSM), and monthly customer charges where applicable. Municipal franchise fees and local taxes excluded. Time-of-use plans are calculated from your actual hourly data. Verify current rates at{' '}
-        <a href="https://www.georgiapower.com/residential/rate-plans.html" target="_blank" rel="noopener noreferrer">georgiapower.com</a>.
+        {provider === 'georgia_power'
+          ? <>Costs include tariff energy charges (Jan 2025 rates), an estimated $0.05/kWh rider adder (FCR-26 + ECCR + DSM), and monthly customer charges where applicable. Municipal franchise fees and local taxes excluded. Time-of-use plans are calculated from your actual hourly data. Verify current rates at{' '}<a href="https://www.georgiapower.com/residential/rate-plans.html" target="_blank" rel="noopener noreferrer">georgiapower.com</a>.</>
+          : <>Costs use 2025 Cobb EMC residential tariffs (all-inclusive — no separate rider). Monthly service charges included. Time-of-use plans calculated from your actual hourly data. Smart Choice demand is estimated from your peak 2–7 PM hour (actual Energy Saving Peak Days are utility-designated). Verify current rates at{' '}<a href="https://www.cobbemc.com/rates" target="_blank" rel="noopener noreferrer">cobbemc.com/rates</a>.</>
+        }
       </div>
 
-      {periodsRef.current && (
+      {provider === 'georgia_power' && periodsRef.current && (
         <div className="pb-section" style={{ borderBottom: 'none' }}>
           <SolarAnalyzer periods={periodsRef.current} baselineResult={result} />
         </div>
