@@ -108,7 +108,12 @@ export default function PowerBillAnalyzer() {
     return (
       <div className="pb-shell">
         <div className="pb-header pb-header--landing">
-          <h1 className="pb-title">{provider === 'cobb_emc' ? 'Cobb EMC' : 'Georgia Power'} Plan Analyzer</h1>
+          <h1 className="pb-title">Power Rate Plan Analyzer</h1>
+          <p className="pb-tagline">
+            Most households are on their utility&rsquo;s default rate plan — but depending on <em>when</em> you use electricity,
+            a different plan from the same provider could cut your annual bill by hundreds of dollars.
+            Upload your hourly usage data below and we&rsquo;ll run the numbers across every available plan so you can see exactly where you stand.
+          </p>
         </div>
         <PrivacyBar inline />
         <div className="pb-provider-section">
