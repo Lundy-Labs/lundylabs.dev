@@ -13,8 +13,9 @@ export default function Nav() {
           <Link href="/#about" className="site-nav__link">About</Link>
           <Link href="/#projects" className="site-nav__link">Projects</Link>
           <Link href="/#blog" className="site-nav__link">Blog</Link>
-          <Link href="/power-analyzer" className={cn(buttonVariants({ size: 'sm' }))}>
-            Bill Analyzer
+          <Link href="/power-analyzer" className="site-nav__link">Electric Analyzer</Link>
+          <Link href="/gas-analyzer" className={cn(buttonVariants({ size: 'sm' }))}>
+            Gas Analyzer
           </Link>
         </nav>
       </div>
