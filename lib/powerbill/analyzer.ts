@@ -1,5 +1,5 @@
-import type { DailyRecord, BillingPeriod, PlanResult, AnalysisResult, MonthlyPlanCost } from './types'
-import { PLANS, SUMMER_MONTHS, RIDER_PER_KWH } from './rates'
+import type { DailyRecord, BillingPeriod, PlanResult, AnalysisResult, MonthlyPlanCost, ProviderId } from './types'
+import { PLANS, SUMMER_MONTHS, RIDER_PER_KWH, COBB_PLANS } from './rates'
 
 function withRider(kWh: number): number { return kWh * RIDER_PER_KWH }
 
@@ -170,14 +170,121 @@ export function calcOvernightAdvantage(periods: BillingPeriod[]): PlanResult {
   }
 }
 
-export function analyze(records: DailyRecord[], periods: BillingPeriod[]): AnalysisResult {
-  const plans: PlanResult[] = [
-    calcR30(periods),
-    calcPrePay(periods),
-    calcNightsWeekends(periods),
-    calcSmartUsage(periods),
-    calcOvernightAdvantage(periods),
-  ]
+// NiteFlex TOU helpers (Cobb EMC)
+function isNiteFlexOvernight(hour: number): boolean { return hour < 6 }
+function isNiteFlexOnPeak(hour: number): boolean { return hour >= 13 && hour <= 20 }
+
+export function calcCobbStandard(periods: BillingPeriod[]): PlanResult {
+  const plan = COBB_PLANS.cobb_standard
+  const monthlyCosts: MonthlyPlanCost[] = []
+  let annual = 0, energyCharge = 0, customerCharge = 0
+  for (const p of periods) {
+    const tier1 = Math.min(p.totalKWh, plan.tierThreshold) * plan.baseRate
+    const excess = Math.max(0, p.totalKWh - plan.tierThreshold)
+    const energy = tier1 + excess * (p.isSummer ? plan.summerExcessRate : plan.winterExcessRate)
+    const cc = plan.customerChargePerMonth
+    const total = energy + cc
+    monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy; customerCharge += cc; annual += total
+  }
+  return {
+    planId: 'cobb_standard', planName: plan.name, annualCost: annual, monthlyCosts,
+    annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
+    requiresTOUAssumption: false,
+    notes: ['First 1,000 kWh @ $0.083. Excess: $0.090 winter, $0.125 summer. Rates all-inclusive.'],
+    breakdown: { energyCharge, riderCharge: 0, customerCharge, demandCharge: 0, total: annual },
+  }
+}
+
+export function calcCobbFixed(periods: BillingPeriod[]): PlanResult {
+  const plan = COBB_PLANS.cobb_fixed
+  const monthlyCosts: MonthlyPlanCost[] = []
+  let annual = 0, energyCharge = 0, customerCharge = 0
+  for (const p of periods) {
+    const energy = p.totalKWh * plan.rate
+    const cc = plan.customerChargePerMonth
+    const total = energy + cc
+    monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy; customerCharge += cc; annual += total
+  }
+  return {
+    planId: 'cobb_fixed', planName: plan.name, annualCost: annual, monthlyCosts,
+    annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
+    requiresTOUAssumption: false,
+    notes: ['Flat $0.0825/kWh all year. $40/month service charge. Rate all-inclusive.'],
+    breakdown: { energyCharge, riderCharge: 0, customerCharge, demandCharge: 0, total: annual },
+  }
+}
+
+export function calcCobbNiteFlex(periods: BillingPeriod[]): PlanResult {
+  const plan = COBB_PLANS.cobb_niteflex
+  const monthlyCosts: MonthlyPlanCost[] = []
+  let annual = 0, energyCharge = 0, customerCharge = 0
+  for (const p of periods) {
+    let onPeakKWh = 0, offPeakKWh = 0, overnightKWh = 0
+    for (const day of p.days) {
+      for (const hr of day.hours) {
+        if (isNiteFlexOvernight(hr.hour)) overnightKWh += hr.kWh
+        else if (isNiteFlexOnPeak(hr.hour)) onPeakKWh += hr.kWh
+        else offPeakKWh += hr.kWh
+      }
+    }
+    const chargeableOvernight = Math.max(0, overnightKWh - plan.overnightFreeKWh)
+    const energy = onPeakKWh * plan.onPeakRate
+      + offPeakKWh * plan.offPeakRate
+      + chargeableOvernight * plan.overnightRate
+    const cc = plan.customerChargePerMonth
+    const total = energy + cc
+    monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy; customerCharge += cc; annual += total
+  }
+  return {
+    planId: 'cobb_niteflex', planName: plan.name, annualCost: annual, monthlyCosts,
+    annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
+    requiresTOUAssumption: false,
+    notes: [
+      'Calculated from actual hourly usage.',
+      'On-peak (1–9 PM): $0.14. Off-peak (6 AM–1 PM, 9 PM–midnight): $0.075.',
+      'Overnight (midnight–6 AM): first 400 kWh/month free, then $0.05.',
+    ],
+    breakdown: { energyCharge, riderCharge: 0, customerCharge, demandCharge: 0, total: annual },
+  }
+}
+
+export function calcCobbSmartChoice(periods: BillingPeriod[]): PlanResult {
+  const plan = COBB_PLANS.cobb_smart_choice
+  const monthlyCosts: MonthlyPlanCost[] = []
+  let annual = 0, energyCharge = 0, customerCharge = 0, demandCharge = 0
+  for (const p of periods) {
+    const energy = p.totalKWh * plan.rate
+    let peakKW = 0
+    for (const day of p.days) {
+      for (const hr of day.hours) {
+        if (isOnPeakHour(hr.hour) && hr.kWh > peakKW) peakKW = hr.kWh
+      }
+    }
+    const demandCost = Math.max(0, peakKW - plan.demandFreeKW) * plan.demandChargePerKW
+    const cc = plan.customerChargePerMonth
+    const total = energy + demandCost + cc
+    monthlyCosts.push({ billPeriod: p.key, cost: total, kWh: p.totalKWh })
+    energyCharge += energy; customerCharge += cc; demandCharge += demandCost; annual += total
+  }
+  return {
+    planId: 'cobb_smart_choice', planName: plan.name, annualCost: annual, monthlyCosts,
+    annualKWh: periods.reduce((s, p) => s + p.totalKWh, 0),
+    requiresTOUAssumption: false,
+    notes: [
+      'Flat $0.075/kWh. Demand charge ($5.95/kW) on peak draw above 3 kW during 2–7 PM on Energy Saving Peak Days.',
+      'Demand estimated from your highest single-hour draw during 2–7 PM — actual peak days are utility-designated.',
+    ],
+    breakdown: { energyCharge, riderCharge: 0, customerCharge, demandCharge, total: annual },
+  }
+}
+
+export function analyze(records: DailyRecord[], periods: BillingPeriod[], provider: ProviderId = 'georgia_power'): AnalysisResult {
+  const plans: PlanResult[] = provider === 'cobb_emc'
+    ? [calcCobbStandard(periods), calcCobbFixed(periods), calcCobbNiteFlex(periods), calcCobbSmartChoice(periods)]
+    : [calcR30(periods), calcPrePay(periods), calcNightsWeekends(periods), calcSmartUsage(periods), calcOvernightAdvantage(periods)]
 
   const sorted = [...plans].sort((a, b) => a.annualCost - b.annualCost)
 

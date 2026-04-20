@@ -23,7 +23,11 @@ export interface BillingPeriod {
   isSummer: boolean
 }
 
-export type PlanId = 'r30' | 'prepay' | 'nights_weekends' | 'smart_usage' | 'overnight_advantage'
+export type ProviderId = 'georgia_power' | 'cobb_emc'
+
+export type PlanId =
+  | 'r30' | 'prepay' | 'nights_weekends' | 'smart_usage' | 'overnight_advantage'  // Georgia Power
+  | 'cobb_standard' | 'cobb_fixed' | 'cobb_niteflex' | 'cobb_smart_choice'         // Cobb EMC
 
 export interface PlanResult {
   planId: PlanId
