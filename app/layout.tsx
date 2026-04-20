@@ -9,7 +9,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: "Lundy Labs LLC",
-  description: "A small think tank for practical ideas.",
+  description: "A small think tank building practical tools for everyday decisions.",
 };
 
 export default function RootLayout({

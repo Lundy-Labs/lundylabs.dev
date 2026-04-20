@@ -4,11 +4,12 @@ export function middleware(req: NextRequest) {
   const host = req.headers.get('host') ?? ''
   const subdomain = host.split('.')[0]
 
-  if (subdomain === 'powerbill') {
+  if (subdomain === 'utilitypilot') {
     const url = req.nextUrl.clone()
-    const original = url.pathname
-    url.pathname = original === '/' ? '/power-analyzer' : `/power-analyzer${original}`
-    return NextResponse.rewrite(url)
+    if (url.pathname === '/') {
+      url.pathname = '/utility-pilot'
+      return NextResponse.rewrite(url)
+    }
   }
 
   return NextResponse.next()
