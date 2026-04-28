@@ -35,7 +35,7 @@ export default async function Nav() {
           Lundy Labs
         </Link>
         <nav className="site-nav__links" aria-label="Primary navigation">
-          <Link href="/about" className="site-nav__link">About</Link>
+          {/* <Link href="/about" className="site-nav__link">About</Link> */}
           <Link href="/projects" className="site-nav__link">Projects</Link>
           <Link href="/contact" className="site-nav__link">Contact</Link>
         </nav>

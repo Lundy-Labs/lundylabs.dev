@@ -7,24 +7,17 @@ export default function Home() {
       <section id="mission" className="ll-mission ll-mission--top">
         <div className="ll-mission__inner">
           <figure className="ll-mission__figure">
-            <div className="ll-mission__art">
-              <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <defs>
-                  <linearGradient id="missionSky" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#e9efd8" />
-                    <stop offset="100%" stopColor="#cdd9b8" />
-                  </linearGradient>
-                </defs>
-                <rect width="400" height="320" fill="url(#missionSky)" />
-                <circle cx="295" cy="95" r="40" fill="#f5f1e6" opacity="0.9" />
-                <path d="M0 230 Q80 200 160 215 T320 220 T400 215 V320 H0 Z" fill="#b8c5a2" opacity="0.6" />
-                <path d="M0 255 Q100 235 200 245 T400 240 V320 H0 Z" fill="#9bab84" opacity="0.55" />
-                <path d="M0 280 Q120 265 240 275 T400 270 V320 H0 Z" fill="#7a8a66" opacity="0.5" />
-                <g stroke="#3d4a32" strokeWidth="1.25" fill="none" opacity="0.55">
-                  <path d="M120 280 L120 230 M120 245 L108 235 M120 250 L132 240 M120 260 L110 252" />
-                  <path d="M260 285 L260 240 M260 252 L250 244 M260 258 L272 250" />
-                </g>
-              </svg>
+            <div className="ll-mission__art ll-mission__art--photo">
+              <Image
+                src="/images/mission-photo.jpg"
+                alt="Lundy Labs"
+                width={2000}
+                height={1500}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="ll-mission__photo"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                priority
+              />
             </div>
             <figcaption className="ll-mission__cap">Helping you love the life you live  .</figcaption>
           </figure>

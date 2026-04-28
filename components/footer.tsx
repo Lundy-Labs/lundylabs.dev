@@ -14,9 +14,9 @@ export default function Footer() {
           <div className="ll-footer__col">
             <p className="ll-footer__heading">Explore</p>
             <Link href="/" className="ll-footer__link">Home</Link>
-            <Link href="/about" className="ll-footer__link">About</Link>
+            {/* <Link href="/about" className="ll-footer__link">About</Link> */}
             <Link href="/projects" className="ll-footer__link">Projects</Link>
-            <Link href="/blog" className="ll-footer__link">Blog</Link>
+            {/* <Link href="/blog" className="ll-footer__link">Blog</Link> */}
           </div>
           <div className="ll-footer__col">
             <p className="ll-footer__heading">Tools</p>
