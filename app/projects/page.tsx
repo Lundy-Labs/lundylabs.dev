@@ -54,13 +54,75 @@ export default function ProjectsPage() {
             </div>
           </a>
 
+          <a href="https://github.com/Lundy-Labs/claude-apple-reminders-cli" className="ll-project-row ll-project-row--logo-only" target="_blank" rel="noreferrer">
+            <div className="ll-logo-tile ll-logo-tile--row">
+              <Image
+                src="/images/claude-apple-reminders-cli.png"
+                alt="Claude Apple Reminders CLI by Lundy Labs"
+                width={1536}
+                height={1024}
+                className="ll-logo-tile__img"
+              />
+              <span className="ll-project-row__status ll-project-row__status--floating">Open source</span>
+            </div>
+            <div className="ll-project-row__body">
+              <p className="ll-project-row__index">02 — Developer tools</p>
+              <h2 className="ll-project-row__title">Claude Apple Reminders CLI</h2>
+              <p className="ll-project-row__desc">
+                Create and manage Apple Reminders straight from your terminal — built for Claude.
+              </p>
+              <ul className="ll-project-row__features">
+                <li>Add, complete, and list reminders</li>
+                <li>Works across your Reminders lists</li>
+                <li>Scriptable, terminal-first workflow</li>
+              </ul>
+              <span className="ll-project-row__cta">
+                View on GitHub
+                <svg width="14" height="10" viewBox="0 0 16 12" fill="none" stroke="currentColor" strokeWidth="1.75">
+                  <path d="M1 6h13M9 1l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </div>
+          </a>
+
+          <a href="https://github.com/Lundy-Labs/claude-apple-notes-cli" className="ll-project-row ll-project-row--logo-only" target="_blank" rel="noreferrer">
+            <div className="ll-logo-tile ll-logo-tile--row">
+              <Image
+                src="/images/claude-apple-notes-cli.png"
+                alt="Claude Apple Notes CLI by Lundy Labs"
+                width={1536}
+                height={1024}
+                className="ll-logo-tile__img"
+              />
+              <span className="ll-project-row__status ll-project-row__status--floating">Open source</span>
+            </div>
+            <div className="ll-project-row__body">
+              <p className="ll-project-row__index">03 — Developer tools</p>
+              <h2 className="ll-project-row__title">Claude Apple Notes CLI</h2>
+              <p className="ll-project-row__desc">
+                Read, write, and manage Apple Notes from the command line — built for Claude.
+              </p>
+              <ul className="ll-project-row__features">
+                <li>Create and edit notes from the terminal</li>
+                <li>Search and list your notes</li>
+                <li>Scriptable, terminal-first workflow</li>
+              </ul>
+              <span className="ll-project-row__cta">
+                View on GitHub
+                <svg width="14" height="10" viewBox="0 0 16 12" fill="none" stroke="currentColor" strokeWidth="1.75">
+                  <path d="M1 6h13M9 1l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </div>
+          </a>
+
           <article className="ll-project-row ll-project-row--logo-only">
             <div className="ll-logo-tile ll-logo-tile--row ll-logo-tile--soon">
               <span className="ll-logo-tile__mark ll-logo-tile__mark--lg">+</span>
               <span className="ll-project-row__status ll-project-row__status--planned ll-project-row__status--floating">Soon</span>
             </div>
             <div className="ll-project-row__body">
-              <p className="ll-project-row__index">02 — In the lab</p>
+              <p className="ll-project-row__index">04 — In the lab</p>
               <h2 className="ll-project-row__title">More to come</h2>
               <p className="ll-project-row__desc">
                 We&apos;re heads-down on the next tool. Same recipe: solve one annoying problem, keep it private, keep it free.
