@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { features } from '@/lib/features'
 
 export default function Footer() {
   return (
@@ -18,10 +19,12 @@ export default function Footer() {
             <Link href="/projects" className="ll-footer__link">Projects</Link>
             {/* <Link href="/blog" className="ll-footer__link">Blog</Link> */}
           </div>
-          <div className="ll-footer__col">
-            <p className="ll-footer__heading">Tools</p>
-            <a href="https://utilitypilot.co" className="ll-footer__link">Utility Pilot</a>
-          </div>
+          {features.utilityPilot && (
+            <div className="ll-footer__col">
+              <p className="ll-footer__heading">Tools</p>
+              <a href="https://utilitypilot.co" className="ll-footer__link">Utility Pilot</a>
+            </div>
+          )}
           <div className="ll-footer__col">
             <p className="ll-footer__heading">Company</p>
             <Link href="/contact" className="ll-footer__link">Contact</Link>
