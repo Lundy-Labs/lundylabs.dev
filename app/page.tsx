@@ -24,7 +24,7 @@ export default function Home() {
 
           <div className="ll-mission__text">
             <p className="ll-mission__eyebrow">Our Goal</p>
-            <h2 className="ll-mission__title">One goal — improve lives.</h2>
+            <h2 className="ll-mission__title">Spread love and leave the world in a better place.</h2>
             <p className="ll-mission__lede">
               Our mission: Dream it, build it and live it. 
             </p>
