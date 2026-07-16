@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Footer from '@/components/footer'
+import { features } from '@/lib/features'
 
 export default function Home() {
   return (
@@ -42,24 +43,26 @@ export default function Home() {
         </header>
 
         <div className="ll-portfolio__grid">
-          <a href="https://utilitypilot.co" className="ll-card ll-card--logo-only">
-            <div className="ll-logo-tile">
-              <Image
-                src="/images/utility-pilot-logo.png"
-                alt="Utility Pilot by Lundy Labs"
-                width={1500}
-                height={500}
-                className="ll-logo-tile__img"
-                priority
-              />
-              <span className="ll-card__badge ll-card__badge--floating">Live</span>
-            </div>
-            <div className="ll-card__meta">
-              <span className="ll-card__tag">Energy</span>
-              <h3 className="ll-card__name">Utility Pilot</h3>
-              <p className="ll-card__cap">Compare electricity & gas plans with your real usage data.</p>
-            </div>
-          </a>
+          {features.utilityPilot && (
+            <a href="https://utilitypilot.co" className="ll-card ll-card--logo-only">
+              <div className="ll-logo-tile">
+                <Image
+                  src="/images/utility-pilot-logo.png"
+                  alt="Utility Pilot by Lundy Labs"
+                  width={1500}
+                  height={500}
+                  className="ll-logo-tile__img"
+                  priority
+                />
+                <span className="ll-card__badge ll-card__badge--floating">Live</span>
+              </div>
+              <div className="ll-card__meta">
+                <span className="ll-card__tag">Energy</span>
+                <h3 className="ll-card__name">Utility Pilot</h3>
+                <p className="ll-card__cap">Compare electricity & gas plans with your real usage data.</p>
+              </div>
+            </a>
+          )}
 
           <a href="https://github.com/Lundy-Labs/claude-apple-reminders-cli" className="ll-card ll-card--logo-only" target="_blank" rel="noreferrer">
             <div className="ll-logo-tile">
