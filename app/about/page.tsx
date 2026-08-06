@@ -4,65 +4,71 @@ import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'About — Lundy Labs',
-  description: 'A small think tank building practical tools for everyday decisions.',
+  description:
+    'Lundy Labs is built by Nic Lundegard — a small Atlanta studio making free, private tools for everyday decisions.',
 }
+
+const LINKEDIN_URL = 'https://www.linkedin.com/in/nlundegard'
 
 export default function AboutPage() {
   return (
     <>
-      <section className="ll-page ll-page--top">
+      <section className="ll-page ll-page--top ll-page--narrow">
         <header className="ll-page__head">
           <p className="ll-page__eyebrow">About</p>
-          <h1 className="ll-page__title">The world doesnt change, if we don't try.</h1>
+          <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
           <p className="ll-page__lede">
-            We strive to improve peoples lives by putting smiles on their faces, make dreams realities, and allowing people to live fulfilled lives.
+            I run Lundy Labs from Atlanta — a one-person studio building free tools
+            that help people make clearer everyday decisions.
           </p>
         </header>
 
-        <div className="ll-prose-grid">
-          <div className="ll-prose">
-            <p>
-              We build focused tools for problems that are technically solvable but practically ignored.
-            </p>
-            <p>
-              Most everyday decisions happen in the dark — people don't know if they're on the right rate plan, whether solar makes sense for their roof, or how their usage compares to similar homes. We build tools that change that.
-            </p>
-            <p>
-              Everything we ship is free, private, and runs entirely in your browser. No accounts. No tracking. No data retention.
-            </p>
-          </div>
+        <div className="ll-prose">
+          <p>
+            Most of the problems I work on are technically solvable but practically
+            ignored: whether you&apos;re on the right utility rate plan, if solar makes
+            sense for your roof, or how to get useful work done from a terminal without
+            fighting the tools.
+          </p>
+          <p>
+            I built Lundy Labs because I kept hitting those gaps myself and couldn&apos;t
+            find a clean answer. The work stays small on purpose — finished tools,
+            no accounts, no tracking, and your files never leave your browser.
+          </p>
+          <p>
+            If something here helps you, or you want to talk about what&apos;s next,
+            I&apos;m easy to reach. This is my name on it.
+          </p>
+        </div>
 
-          <ul className="ll-pillars">
-            <li>
-              <p className="ll-pillar__tag">Love driven</p>
-              <p className="ll-pillar__body">There's no oth.</p>
-            </li>
-            <li>
-              <p className="ll-pillar__tag">Fun by design</p>
-              <p className="ll-pillar__body">Your files never leave your browser. No accounts, no tracking, no data retention.</p>
-            </li>
-            <li>
-              <p className="ll-pillar__tag">Keep dreaming</p>
-              <p className="ll-pillar__body">A</p>
-            </li>
-          </ul>
+        <div className="ll-contact-card">
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Founder</span>
+            <span className="ll-contact-row__value">Nic Lundegard</span>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">LinkedIn</span>
+            <a
+              href={LINKEDIN_URL}
+              className="ll-contact-row__value"
+              target="_blank"
+              rel="noreferrer"
+            >
+              linkedin.com/in/nlundegard
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Email</span>
+            <a href="mailto:nic@lundylabs.dev" className="ll-contact-row__value">
+              nic@lundylabs.dev
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Location</span>
+            <span className="ll-contact-row__value">Atlanta, Georgia</span>
+          </div>
         </div>
       </section>
-
-      {/* <section className="ll-page ll-page--rule">
-        <div className="ll-page__head">
-          <p className="ll-page__eyebrow">How we work</p>
-          <h2 className="ll-page__title ll-page__title--md">Small, opinionated, finished.</h2>
-        </div>
-        <div className="ll-prose-pair">
-          <p>
-            Lundy Labs ships small tools. Each one solves a single problem well — usually a problem we hit ourselves and couldn't find a clean answer to.
-          </p>
-          <p>
-            We don't take advertising, sell user data, or build engagement loops. If a tool answers your question and you never come back, that's a success.
-          </p>
-        </div>
-      </section> */}
 
       <section className="ll-page ll-page--cta">
         <div className="ll-cta">

@@ -1162,6 +1162,10 @@ a.ll-card:hover .ll-card__media svg {
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
+.ll-prose + .ll-contact-card {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
 .ll-contact-row {
   display: grid;
   grid-template-columns: 110px 1fr;

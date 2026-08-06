@@ -15,7 +15,7 @@ export default function Footer() {
           <div className="ll-footer__col">
             <p className="ll-footer__heading">Explore</p>
             <Link href="/" className="ll-footer__link">Home</Link>
-            {/* <Link href="/about" className="ll-footer__link">About</Link> */}
+            <Link href="/about" className="ll-footer__link">About</Link>
             <Link href="/projects" className="ll-footer__link">Projects</Link>
             {/* <Link href="/blog" className="ll-footer__link">Blog</Link> */}
           </div>
@@ -27,6 +27,7 @@ export default function Footer() {
           )}
           <div className="ll-footer__col">
             <p className="ll-footer__heading">Company</p>
+            <Link href="/about" className="ll-footer__link">Nic Lundegard</Link>
             <Link href="/contact" className="ll-footer__link">Contact</Link>
             <a href="mailto:hello@lundylabs.dev" className="ll-footer__link">Email</a>
           </div>
@@ -36,7 +37,7 @@ export default function Footer() {
       <div className="ll-footer__bigmark" aria-hidden="true">Lundy Labs</div>
 
       <div className="ll-footer__bar">
-        <p>© {new Date().getFullYear()} Lundy Labs LLC</p>
+        <p>© {new Date().getFullYear()} Lundy Labs LLC · Built by Nic Lundegard</p>
         <p>Built in Georgia</p>
       </div>
     </footer>
