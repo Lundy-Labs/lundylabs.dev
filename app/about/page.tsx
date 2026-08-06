@@ -5,10 +5,11 @@ import Footer from '@/components/footer'
 export const metadata: Metadata = {
   title: 'About — Lundy Labs',
   description:
-    'Lundy Labs is built by Nic Lundegard — a small Atlanta studio making free, private tools for everyday decisions.',
+    'Lundy Labs is built by Nic Lundegard — an engineer in Atlanta making free, private tools for everyday decisions.',
 }
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/nlundegard'
+const PERSONAL_SITE_URL = 'https://lundy.me'
 
 export default function AboutPage() {
   return (
@@ -18,8 +19,9 @@ export default function AboutPage() {
           <p className="ll-page__eyebrow">About</p>
           <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
           <p className="ll-page__lede">
-            I run Lundy Labs from Atlanta — a one-person studio building free tools
-            that help people make clearer everyday decisions.
+            I like to build things. I&apos;m an engineer at heart, and Lundy Labs is
+            where I turn that into free tools that help people make clearer everyday
+            decisions.
           </p>
         </header>
 
@@ -55,6 +57,17 @@ export default function AboutPage() {
               rel="noreferrer"
             >
               linkedin.com/in/nlundegard
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Personal</span>
+            <a
+              href={PERSONAL_SITE_URL}
+              className="ll-contact-row__value"
+              target="_blank"
+              rel="noreferrer"
+            >
+              lundy.me
             </a>
           </div>
           <div className="ll-contact-row">
