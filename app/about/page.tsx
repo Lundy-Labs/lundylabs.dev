@@ -6,7 +6,7 @@ import Footer from '@/components/footer'
 export const metadata: Metadata = {
   title: 'About — Lundy Labs',
   description:
-    'Lundy Labs is built by Nic Lundegard — an engineer in Atlanta making free, private tools for everyday decisions.',
+    'Lundy Labs is built by Nic Lundegard — dream it, build it, live it, and leave the world better than we found it.',
 }
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/nlundegard'
@@ -30,28 +30,26 @@ export default function AboutPage() {
             <p className="ll-page__eyebrow">About</p>
             <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
             <p className="ll-page__lede">
-              I like to build things. I&apos;m an engineer at heart, and Lundy Labs is
-              where I turn that into free tools that help people make clearer everyday
-              decisions.
+              I like to build things. Lundy Labs is where I dream it, build it, live it,
+              and love it — using imagination to leave the world better than I found it.
             </p>
           </header>
         </div>
 
         <div className="ll-prose">
           <p>
-            Most of the problems I work on are technically solvable but practically
-            ignored: whether you&apos;re on the right utility rate plan, if solar makes
-            sense for your roof, or how to get useful work done from a terminal without
-            fighting the tools.
+            I started Lundy Labs because I believe the world doesn&apos;t change if we
+            don&apos;t try. I want to spread love, put smiles on faces, and help people
+            live more fulfilled lives — one idea at a time.
           </p>
           <p>
-            I built Lundy Labs because I kept hitting those gaps myself and couldn&apos;t
-            find a clean answer. The work stays small on purpose — finished tools,
-            no accounts, no tracking, and your files never leave your browser.
+            Everything here is built from that mindset: dream boldly, build with care,
+            live what you make, and love the work enough to leave things better than
+            you found them.
           </p>
           <p>
-            If something here helps you, or you want to talk about what&apos;s next,
-            I&apos;m easy to reach. This is my name on it.
+            If something here resonates, or you have an idea worth building, I&apos;m
+            easy to reach. This is my name on it.
           </p>
         </div>
 
