@@ -48,18 +48,18 @@ export default function Home() {
               <div className="ll-logo-tile">
                 <Image
                   src="/images/utility-pilot-logo.png"
-                  alt="Utility Pilot by Lundy Labs"
-                  width={1500}
-                  height={500}
+                  alt="UtilityPilot by Lundy Labs"
+                  width={1536}
+                  height={1024}
                   className="ll-logo-tile__img"
                   priority
                 />
                 <span className="ll-card__badge ll-card__badge--floating">Live</span>
               </div>
               <div className="ll-card__meta">
-                <span className="ll-card__tag">Energy</span>
-                <h3 className="ll-card__name">Utility Pilot</h3>
-                <p className="ll-card__cap">Compare electricity & gas plans with your real usage data.</p>
+                <span className="ll-card__tag">Phone &amp; internet</span>
+                <h3 className="ll-card__name">UtilityPilot</h3>
+                <p className="ll-card__cap">A free check on what you pay for phone and internet — ranked by cost, not commissions.</p>
               </div>
             </a>
           )}
