@@ -1,68 +1,97 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Footer from '@/components/footer'
 
 export const metadata: Metadata = {
   title: 'About — Lundy Labs',
-  description: 'A small think tank building practical tools for everyday decisions.',
+  description:
+    'Lundy Labs is built by Nic Lundegard — dream it, build it, live it, and leave the world better than we found it.',
 }
+
+const LINKEDIN_URL = 'https://www.linkedin.com/in/nlundegard'
+const PERSONAL_SITE_URL = 'https://lundy.me'
 
 export default function AboutPage() {
   return (
     <>
-      <section className="ll-page ll-page--top">
-        <header className="ll-page__head">
-          <p className="ll-page__eyebrow">About</p>
-          <h1 className="ll-page__title">The world doesnt change, if we don't try.</h1>
-          <p className="ll-page__lede">
-            We strive to improve peoples lives by putting smiles on their faces, make dreams realities, and allowing people to live fulfilled lives.
+      <section className="ll-page ll-page--top ll-page--narrow">
+        <div className="ll-about-intro">
+          <Image
+            src="/images/nic-lundegard.jpg"
+            alt="Nic Lundegard, founder of Lundy Labs"
+            width={960}
+            height={960}
+            className="ll-about-photo"
+            priority
+            sizes="(max-width: 640px) 160px, 200px"
+          />
+          <header className="ll-page__head ll-about-intro__head">
+            <p className="ll-page__eyebrow">About</p>
+            <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
+            <p className="ll-page__lede">
+              I like to build things. Lundy Labs is where I dream it, build it, live it,
+              and love it — using imagination to leave the world better than I found it.
+            </p>
+          </header>
+        </div>
+
+        <div className="ll-prose">
+          <p>
+            I started Lundy Labs because I believe the world doesn&apos;t change if we
+            don&apos;t try. I want to spread love, put smiles on faces, and help people
+            live more fulfilled lives — one idea at a time.
           </p>
-        </header>
+          <p>
+            Everything here is built from that mindset: dream boldly, build with care,
+            live what you make, and love the work enough to leave things better than
+            you found them.
+          </p>
+          <p>
+            If something here resonates, or you have an idea worth building, I&apos;m
+            easy to reach. This is my name on it.
+          </p>
+        </div>
 
-        <div className="ll-prose-grid">
-          <div className="ll-prose">
-            <p>
-              We build focused tools for problems that are technically solvable but practically ignored.
-            </p>
-            <p>
-              Most everyday decisions happen in the dark — people don't know if they're on the right rate plan, whether solar makes sense for their roof, or how their usage compares to similar homes. We build tools that change that.
-            </p>
-            <p>
-              Everything we ship is free, private, and runs entirely in your browser. No accounts. No tracking. No data retention.
-            </p>
+        <div className="ll-contact-card">
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Founder</span>
+            <span className="ll-contact-row__value">Nic Lundegard</span>
           </div>
-
-          <ul className="ll-pillars">
-            <li>
-              <p className="ll-pillar__tag">Love driven</p>
-              <p className="ll-pillar__body">There's no oth.</p>
-            </li>
-            <li>
-              <p className="ll-pillar__tag">Fun by design</p>
-              <p className="ll-pillar__body">Your files never leave your browser. No accounts, no tracking, no data retention.</p>
-            </li>
-            <li>
-              <p className="ll-pillar__tag">Keep dreaming</p>
-              <p className="ll-pillar__body">A</p>
-            </li>
-          </ul>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">LinkedIn</span>
+            <a
+              href={LINKEDIN_URL}
+              className="ll-contact-row__value"
+              target="_blank"
+              rel="noreferrer"
+            >
+              linkedin.com/in/nlundegard
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Personal</span>
+            <a
+              href={PERSONAL_SITE_URL}
+              className="ll-contact-row__value"
+              target="_blank"
+              rel="noreferrer"
+            >
+              lundy.me
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Email</span>
+            <a href="mailto:nic@lundylabs.dev" className="ll-contact-row__value">
+              nic@lundylabs.dev
+            </a>
+          </div>
+          <div className="ll-contact-row">
+            <span className="ll-contact-row__label">Location</span>
+            <span className="ll-contact-row__value">Atlanta, Georgia</span>
+          </div>
         </div>
       </section>
-
-      {/* <section className="ll-page ll-page--rule">
-        <div className="ll-page__head">
-          <p className="ll-page__eyebrow">How we work</p>
-          <h2 className="ll-page__title ll-page__title--md">Small, opinionated, finished.</h2>
-        </div>
-        <div className="ll-prose-pair">
-          <p>
-            Lundy Labs ships small tools. Each one solves a single problem well — usually a problem we hit ourselves and couldn't find a clean answer to.
-          </p>
-          <p>
-            We don't take advertising, sell user data, or build engagement loops. If a tool answers your question and you never come back, that's a success.
-          </p>
-        </div>
-      </section> */}
 
       <section className="ll-page ll-page--cta">
         <div className="ll-cta">
