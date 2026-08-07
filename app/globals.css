@@ -794,6 +794,39 @@ a.ll-card:hover .ll-card__media svg {
   max-width: 50ch;
 }
 
+.ll-about-intro {
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 2.75rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.ll-about-intro__head {
+  margin-bottom: 0;
+  max-width: none;
+}
+
+.ll-about-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .ll-about-intro {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .ll-about-photo {
+    width: min(160px, 42vw);
+  }
+}
+
 /* Prose */
 .ll-prose {
   display: flex;

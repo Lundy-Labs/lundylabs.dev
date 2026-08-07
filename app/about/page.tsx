@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import Footer from '@/components/footer'
@@ -15,15 +16,26 @@ export default function AboutPage() {
   return (
     <>
       <section className="ll-page ll-page--top ll-page--narrow">
-        <header className="ll-page__head">
-          <p className="ll-page__eyebrow">About</p>
-          <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
-          <p className="ll-page__lede">
-            I like to build things. I&apos;m an engineer at heart, and Lundy Labs is
-            where I turn that into free tools that help people make clearer everyday
-            decisions.
-          </p>
-        </header>
+        <div className="ll-about-intro">
+          <Image
+            src="/images/nic-lundegard.jpg"
+            alt="Nic Lundegard, founder of Lundy Labs"
+            width={960}
+            height={960}
+            className="ll-about-photo"
+            priority
+            sizes="(max-width: 640px) 160px, 200px"
+          />
+          <header className="ll-page__head ll-about-intro__head">
+            <p className="ll-page__eyebrow">About</p>
+            <h1 className="ll-page__title">Hi, I&apos;m Nic Lundegard.</h1>
+            <p className="ll-page__lede">
+              I like to build things. I&apos;m an engineer at heart, and Lundy Labs is
+              where I turn that into free tools that help people make clearer everyday
+              decisions.
+            </p>
+          </header>
+        </div>
 
         <div className="ll-prose">
           <p>
