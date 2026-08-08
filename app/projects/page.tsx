@@ -31,26 +31,26 @@ export default function ProjectsPage() {
             <a href="https://utilitypilot.co" className="ll-project-row ll-project-row--live ll-project-row--logo-only">
               <div className="ll-logo-tile ll-logo-tile--row">
                 <Image
-                  src="/images/utility-pilot-logo.png"
-                  alt="Utility Pilot by Lundy Labs"
-                  width={1500}
-                  height={500}
-                  className="ll-logo-tile__img"
+                  src="/images/utility-pilot-icon.png"
+                  alt="UtilityPilot by Lundy Labs"
+                  width={1536}
+                  height={1536}
+                  className="ll-logo-tile__img ll-logo-tile__img--utility-pilot"
                   priority
                 />
                 <span className="ll-project-row__status ll-project-row__status--live ll-project-row__status--floating">Live</span>
               </div>
               <div className="ll-project-row__body">
-                <p className="ll-project-row__index">01 — Energy</p>
-                <h2 className="ll-project-row__title">Utility Pilot</h2>
+                <p className="ll-project-row__index">01 — Phone &amp; internet</p>
+                <h2 className="ll-project-row__title">UtilityPilot</h2>
                 <p className="ll-project-row__desc">
-                  Helping you optimize your utilities and put money back in your pocket.
+                  A free, plain-English check on what you pay for phone and internet. We compare every plan — not just the ones that pay us.
                 </p>
                 <ul className="ll-project-row__features">
-                  <li>Power Rate Plan Analyzer</li>
-                  <li>Gate Plan Analyzer</li>
-                  <li>Solar and Battery ROI Calculator</li>
-                  <li>Cell and Internet Analyzer</li>
+                  <li>Cell plan comparison with real bill context</li>
+                  <li>Ranked by total cost, not affiliate payouts</li>
+                  <li>No account, no email, nothing stored for marketing</li>
+                  <li>Internet plans coming soon</li>
                 </ul>
                 <span className="ll-project-row__cta">
                   Visit project
