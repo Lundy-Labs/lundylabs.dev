@@ -2730,6 +2730,16 @@ a.ll-project-row:hover .ll-project-row__cta svg {
   transition: transform 0.6s ease;
 }
 
+/* UtilityPilot mark is sparse — let it fill more of the light tile */
+.ll-logo-tile:has(.ll-logo-tile__img--utility-pilot) {
+  padding: 0.75rem;
+}
+
+.ll-logo-tile__img--utility-pilot {
+  max-height: 90%;
+  width: 90%;
+}
+
 a.ll-card.ll-card--logo-only:hover .ll-logo-tile {
   transform: translateY(-4px);
 }

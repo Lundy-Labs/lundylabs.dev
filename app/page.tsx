@@ -47,11 +47,11 @@ export default function Home() {
             <a href="https://utilitypilot.co" className="ll-card ll-card--logo-only">
               <div className="ll-logo-tile">
                 <Image
-                  src="/images/utility-pilot-logo.png"
+                  src="/images/utility-pilot-icon.png"
                   alt="UtilityPilot by Lundy Labs"
                   width={1536}
-                  height={1024}
-                  className="ll-logo-tile__img"
+                  height={1536}
+                  className="ll-logo-tile__img ll-logo-tile__img--utility-pilot"
                   priority
                 />
                 <span className="ll-card__badge ll-card__badge--floating">Live</span>
