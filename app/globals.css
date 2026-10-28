@@ -2740,6 +2740,13 @@ a.ll-project-row:hover .ll-project-row__cta svg {
   width: 90%;
 }
 
+/* Hi Neighbor icon is a full-bleed square — show it as a rounded app icon */
+.ll-logo-tile__img--hi-neighbor {
+  width: auto;
+  max-width: 70%;
+  border-radius: 22%;
+}
+
 a.ll-card.ll-card--logo-only:hover .ll-logo-tile {
   transform: translateY(-4px);
 }
