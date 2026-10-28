@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { headers } from 'next/headers'
 import { buttonVariants } from '@/components/ui/button'
@@ -32,7 +33,14 @@ export default async function Nav() {
     <header className="site-nav">
       <div className="site-nav__inner">
         <Link href="/" className="site-nav__logo">
-          Lundy Labs
+          <Image
+            src="/images/lundy-labs-logo.png"
+            alt="Lundy Labs"
+            width={526}
+            height={507}
+            className="site-nav__logo-img"
+            priority
+          />
         </Link>
         <nav className="site-nav__links" aria-label="Primary navigation">
           <Link href="/about" className="site-nav__link">About</Link>

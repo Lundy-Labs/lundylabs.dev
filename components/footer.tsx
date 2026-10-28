@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { features } from '@/lib/features'
 
@@ -6,7 +7,15 @@ export default function Footer() {
     <footer className="ll-footer">
       <div className="ll-footer__top">
         <div className="ll-footer__brand">
-          <h3 className="ll-footer__wordmark">Lundy Labs</h3>
+          <Link href="/" className="ll-footer__logo-link">
+            <Image
+              src="/images/lundy-labs-logo.png"
+              alt="Lundy Labs"
+              width={526}
+              height={507}
+              className="ll-footer__logo"
+            />
+          </Link>
           <p className="ll-footer__tag">Dream it, build it, live it.</p>
           <a href="mailto:hello@lundylabs.dev" className="ll-footer__email">hello@lundylabs.dev</a>
         </div>
