@@ -43,6 +43,25 @@ export default function Home() {
         </header>
 
         <div className="ll-portfolio__grid">
+          <a href="https://hineighbor.app" className="ll-card ll-card--logo-only">
+            <div className="ll-logo-tile">
+              <Image
+                src="/images/hi-neighbor-icon.png"
+                alt="Hi Neighbor by Lundy Labs"
+                width={1024}
+                height={1024}
+                className="ll-logo-tile__img ll-logo-tile__img--hi-neighbor"
+                priority
+              />
+              <span className="ll-card__badge ll-card__badge--floating">Live</span>
+            </div>
+            <div className="ll-card__meta">
+              <span className="ll-card__tag">HOA management</span>
+              <h3 className="ll-card__name">Hi Neighbor</h3>
+              <p className="ll-card__cap">Easy HOA management for boards and neighbors — dues, announcements, and community in one place.</p>
+            </div>
+          </a>
+
           {features.utilityPilot && (
             <a href="https://utilitypilot.co" className="ll-card ll-card--logo-only">
               <div className="ll-logo-tile">

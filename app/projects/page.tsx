@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   // Keep numbering contiguous when Utility Pilot is hidden ahead of launch.
-  const remindersIndex = features.utilityPilot ? '02' : '01'
-  const notesIndex = features.utilityPilot ? '03' : '02'
-  const soonIndex = features.utilityPilot ? '04' : '03'
+  const remindersIndex = features.utilityPilot ? '03' : '02'
+  const notesIndex = features.utilityPilot ? '04' : '03'
+  const soonIndex = features.utilityPilot ? '05' : '04'
 
   return (
     <>
@@ -27,6 +27,38 @@ export default function ProjectsPage() {
         </header>
 
         <div className="ll-projects-list">
+          <a href="https://hineighbor.app" className="ll-project-row ll-project-row--live ll-project-row--logo-only">
+            <div className="ll-logo-tile ll-logo-tile--row">
+              <Image
+                src="/images/hi-neighbor-icon.png"
+                alt="Hi Neighbor by Lundy Labs"
+                width={1024}
+                height={1024}
+                className="ll-logo-tile__img ll-logo-tile__img--hi-neighbor"
+                priority
+              />
+              <span className="ll-project-row__status ll-project-row__status--live ll-project-row__status--floating">Live</span>
+            </div>
+            <div className="ll-project-row__body">
+              <p className="ll-project-row__index">01 — HOA management</p>
+              <h2 className="ll-project-row__title">Hi Neighbor</h2>
+              <p className="ll-project-row__desc">
+                Easy HOA management for boards and neighbors. One home for dues, announcements, and the conversations that make a neighborhood feel like a community.
+              </p>
+              <ul className="ll-project-row__features">
+                <li>Online dues and payment tracking</li>
+                <li>Community feed and board announcements</li>
+                <li>Web, iOS, and Android apps</li>
+              </ul>
+              <span className="ll-project-row__cta">
+                Visit project
+                <svg width="14" height="10" viewBox="0 0 16 12" fill="none" stroke="currentColor" strokeWidth="1.75">
+                  <path d="M1 6h13M9 1l5 5-5 5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            </div>
+          </a>
+
           {features.utilityPilot && (
             <a href="https://utilitypilot.co" className="ll-project-row ll-project-row--live ll-project-row--logo-only">
               <div className="ll-logo-tile ll-logo-tile--row">
@@ -41,7 +73,7 @@ export default function ProjectsPage() {
                 <span className="ll-project-row__status ll-project-row__status--live ll-project-row__status--floating">Live</span>
               </div>
               <div className="ll-project-row__body">
-                <p className="ll-project-row__index">01 — Phone &amp; internet</p>
+                <p className="ll-project-row__index">02 — Phone &amp; internet</p>
                 <h2 className="ll-project-row__title">UtilityPilot</h2>
                 <p className="ll-project-row__desc">
                   A free, plain-English check on what you pay for phone and internet. We compare every plan — not just the ones that pay us.
